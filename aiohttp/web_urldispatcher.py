@@ -1,7 +1,9 @@
 import abc
 import asyncio
 import base64
+import functools
 import hashlib
+import html
 import inspect
 import keyword
 import os
@@ -89,6 +91,8 @@ PATH_SEP: Final[str] = re.escape("/")
 
 _ExpectHandler = Callable[[Request], Awaitable[Optional[StreamResponse]]]
 _Resolve = Tuple[Optional["UrlMappingMatchInfo"], Set[str]]
+
+html_escape = functools.partial(html.escape, quote=True)
 
 
 class _InfoDict(TypedDict, total=False):
@@ -595,9 +599,14 @@ class StaticResource(PrefixResource):
             url = url / filename
 
         if append_version:
+            unresolved_path = self._directory.joinpath(filename)
             try:
-                filepath = self._directory.joinpath(filename).resolve()
-                if not self._follow_symlinks:
+                if self._follow_symlinks:
+                    normalized_path = Path(os.path.normpath(unresolved_path))
+                    normalized_path.relative_to(self._directory)
+                    filepath = normalized_path.resolve()
+                else:
+                    filepath = unresolved_path.resolve()
                     filepath.relative_to(self._directory)
             except (ValueError, FileNotFoundError):
                 # ValueError for case when path point to symlink
@@ -662,8 +671,13 @@ class StaticResource(PrefixResource):
                 # /static/\\machine_name\c$ or /static/D:\path
                 # where the static dir is totally different
                 raise HTTPForbidden()
-            filepath = self._directory.joinpath(filename).resolve()
-            if not self._follow_symlinks:
+            unresolved_path = self._directory.joinpath(filename)
+            if self._follow_symlinks:
+                normalized_path = Path(os.path.normpath(unresolved_path))
+                normalized_path.relative_to(self._directory)
+                filepath = normalized_path.resolve()
+            else:
+                filepath = unresolved_path.resolve()
                 filepath.relative_to(self._directory)
         except (ValueError, FileNotFoundError) as error:
             # relatively safe
@@ -698,7 +712,7 @@ class StaticResource(PrefixResource):
         assert filepath.is_dir()
 
         relative_path_to_dir = filepath.relative_to(self._directory).as_posix()
-        index_of = f"Index of /{relative_path_to_dir}"
+        index_of = f"Index of /{html_escape(relative_path_to_dir)}"
         h1 = f"<h1>{index_of}</h1>"
 
         index_list = []
@@ -706,7 +720,7 @@ class StaticResource(PrefixResource):
         for _file in sorted(dir_index):
             # show file url as relative to static path
             rel_path = _file.relative_to(self._directory).as_posix()
-            file_url = self._prefix + "/" + rel_path
+            quoted_file_url = _quote_path(self._prefix + "/" + rel_path)
 
             # if file is a directory, add '/' to the end of the name
             if _file.is_dir():
@@ -716,7 +730,7 @@ class StaticResource(PrefixResource):
 
             index_list.append(
                 '<li><a href="{url}">{name}</a></li>'.format(
-                    url=file_url, name=file_name
+                    url=quoted_file_url, name=html_escape(file_name)
                 )
             )
         ul = "<ul>\n{}\n</ul>".format("\n".join(index_list))

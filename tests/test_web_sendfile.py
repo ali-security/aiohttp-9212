@@ -1,9 +1,13 @@
 from pathlib import Path
 from unittest import mock
+from stat import S_IFREG, S_IRUSR, S_IWUSR
 
 from aiohttp import hdrs
 from aiohttp.test_utils import make_mocked_coro, make_mocked_request
 from aiohttp.web_fileresponse import FileResponse
+
+
+MOCK_MODE = S_IFREG | S_IRUSR | S_IWUSR
 
 
 def test_using_gzip_if_header_present_and_file_available(loop) -> None:
@@ -13,8 +17,9 @@ def test_using_gzip_if_header_present_and_file_available(loop) -> None:
 
     gz_filepath = mock.create_autospec(Path, spec_set=True)
     gz_filepath.is_file.return_value = True
-    gz_filepath.stat.return_value.st_size = 1024
-    gz_filepath.stat.return_value.st_mtime_ns = 1603733507222449291
+    gz_filepath.lstat.return_value.st_size = 1024
+    gz_filepath.lstat.return_value.st_mtime_ns = 1603733507222449291
+    gz_filepath.lstat.return_value.st_mode = MOCK_MODE
 
     filepath = mock.create_autospec(Path, spec_set=True)
     filepath.name = "logo.png"
@@ -35,6 +40,9 @@ def test_gzip_if_header_not_present_and_file_available(loop) -> None:
 
     gz_filepath = mock.create_autospec(Path, spec_set=True)
     gz_filepath.is_file.return_value = True
+    gz_filepath.lstat.return_value.st_size = 1024
+    gz_filepath.lstat.return_value.st_mtime_ns = 1603733507222449291
+    gz_filepath.lstat.return_value.st_mode = MOCK_MODE
 
     filepath = mock.create_autospec(Path, spec_set=True)
     filepath.name = "logo.png"

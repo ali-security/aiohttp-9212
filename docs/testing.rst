@@ -24,7 +24,7 @@ For using pytest plugin please install pytest-aiohttp_ library:
 
 .. code-block:: shell
 
-   $ pip install pytest-aiohttp
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' pytest-aiohttp
 
 If you don't want to install *pytest-aiohttp* for some reason you may
 insert ``pytest_plugins = 'aiohttp.pytest_plugin'`` line into

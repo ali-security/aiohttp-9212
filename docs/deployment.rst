@@ -222,8 +222,8 @@ Create a Python virtual environment::
 Now that the virtual environment is ready, we'll proceed to install
 aiohttp and gunicorn::
 
-  >> pip install gunicorn
-  >> pip install aiohttp
+  >> pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' gunicorn
+  >> pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' aiohttp
 
 
 Application

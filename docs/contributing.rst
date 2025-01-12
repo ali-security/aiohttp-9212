@@ -86,7 +86,7 @@ After that please install libraries required for development:
 
 .. code-block:: shell
 
-   $ pip install -r requirements/dev.txt
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' -r requirements/dev.txt
 
 .. note::
 
@@ -216,7 +216,7 @@ To run spell checker on Linux box you should install it first:
 .. code-block:: shell
 
    $ sudo apt-get install enchant
-   $ pip install sphinxcontrib-spelling
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' sphinxcontrib-spelling
 
 Changelog update
 ----------------

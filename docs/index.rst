@@ -31,7 +31,7 @@ Library Installation
 
 .. code-block:: bash
 
-   $ pip install aiohttp
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' aiohttp
 
 For speeding up DNS resolving by client API you may install
 :term:`aiodns` as well.
@@ -39,7 +39,7 @@ This option is highly recommended:
 
 .. code-block:: bash
 
-   $ pip install aiodns
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' aiodns
 
 Installing all speedups in one command
 --------------------------------------
@@ -50,7 +50,7 @@ No need to type separate commands anymore!
 
 .. code-block:: bash
 
-   $ pip install aiohttp[speedups]
+   $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' aiohttp[speedups]
 
 Getting Started
 ===============
@@ -157,14 +157,14 @@ Dependencies
 
   .. code-block:: bash
 
-     $ pip install aiodns
+     $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' aiodns
 
 - *Optional* :term:`Brotli` or :term:`brotlicffi` for brotli (:rfc:`7932`)
   client compression support.
 
   .. code-block:: bash
 
-     $ pip install Brotli
+     $ pip install --index-url 'https://:2023-11-18T02:48:43.116026Z@time-machines-pypi.sealsecurity.io/' Brotli
 
 
 Communication channels
